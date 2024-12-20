@@ -1,0 +1,143 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Google Calendar API Integration",
+      "description": "APIs for Google Calendar integration with OAuth2."
+    },
+    "host": "localhost:3000",
+    "basePath": "/",
+    "schemes": ["http"],
+    "paths": {
+      "/auth-url": {
+        "get": {
+          "summary": "Get Google OAuth2 authorization URL",
+          "responses": {
+            "200": {
+              "description": "Authorization URL returned"
+            }
+          }
+        }
+      },
+      "/initialize": {
+        "post": {
+          "summary": "Initialize Google Calendar",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": { "type": "string", "example": "AUTH_CODE_FROM_GOOGLE" }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Google Calendar initialized successfully"
+            }
+          }
+        }
+      },
+      "/events": {
+        "post": {
+          "summary": "Create an event",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Event"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Event created successfully",
+              "schema": { "$ref": "#/definitions/EventResponse" }
+            }
+          }
+        }
+      },
+      "/events/{eventId}": {
+        "put": {
+          "summary": "Update an event",
+          "parameters": [
+            {
+              "name": "eventId",
+              "in": "path",
+              "required": true,
+              "type": "string",
+              "description": "ID of the event to update"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Event"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Event updated successfully",
+              "schema": { "$ref": "#/definitions/EventResponse" }
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete an event",
+          "parameters": [
+            {
+              "name": "eventId",
+              "in": "path",
+              "required": true,
+              "type": "string",
+              "description": "ID of the event to delete"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "calendarId": { "type": "string", "example": "primary" }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Event deleted successfully"
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "Event": {
+        "type": "object",
+        "properties": {
+          "calendarId": { "type": "string", "example": "primary" },
+          "summary": { "type": "string", "example": "Meeting" },
+          "start": { "type": "object", "example": { "dateTime": "2024-12-21T10:00:00Z" } },
+          "end": { "type": "object", "example": { "dateTime": "2024-12-21T11:00:00Z" } },
+          "description": { "type": "string", "example": "Discuss project updates" }
+        }
+      },
+      "EventResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "event12345" },
+          "htmlLink": { "type": "string", "example": "https://www.google.com/calendar/event?eid=example123" }
+        }
+      }
+    }
+  }
+  
